@@ -25,6 +25,7 @@ function App() {
 
     const scriptLoaded = () => {
       // Change this key to your Bongloy Publishable key
+      // https://sandbox.bongloy.com/
       window.Bongloy.setPublishableKey(
         'pk_test_kYhpd31VBlcHPWrIJKpyH08RLUPrD7LW_9i1hU1JNI4'
       );

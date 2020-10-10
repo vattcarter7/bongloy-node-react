@@ -3,6 +3,8 @@ const Stripe = require('stripe');
 const cors = require('cors');
 require('dotenv').config();
 
+// Change below process.env.BONGLOY_SECRET_KEY to your key
+// https://sandbox.bongloy.com/
 const bongloy = new Stripe(process.env.BONGLOY_SECRET_KEY, {
   host: 'api.bongloy.com'
 });
