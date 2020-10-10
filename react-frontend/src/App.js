@@ -3,6 +3,8 @@ import axios from 'axios';
 
 function App() {
   const [sdkReady, setSdkReady] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState(null);
   const [cardNumber, setCardNumber] = useState('');
   const [expiryMonth, setExpiryMonth] = useState('');
   const [expiryYear, setExpiryYear] = useState('');
@@ -22,6 +24,7 @@ function App() {
     };
 
     const scriptLoaded = () => {
+      // Change this key to your Bongloy Publishable key
       window.Bongloy.setPublishableKey(
         'pk_test_kYhpd31VBlcHPWrIJKpyH08RLUPrD7LW_9i1hU1JNI4'
       );
@@ -44,6 +47,8 @@ function App() {
     };
 
     try {
+      setSuccess(false);
+      setError(null);
       await window.Bongloy.createToken(
         'card',
         cardObject,
@@ -51,8 +56,9 @@ function App() {
           if (statusCode === 201) {
             const { id } = response;
             await axios.post('/charge', { id });
+            setSuccess(true);
           } else {
-            // Handle error
+            setError('Problem purchasing');
           }
         }
       );
@@ -62,8 +68,24 @@ function App() {
   };
 
   return (
-    <div className='App'>
-      {sdkReady && <p>SDK Ready</p>}
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'column'
+      }}
+    >
+      <h3>Demo of Bongloy payment gateway </h3>
+      <div style={{ height: 80, justifyContent: 'center' }}>
+        {sdkReady && success && (
+          <p style={{ color: 'green' }}>
+            Congratulations on you purchase with Bongloy Payment Gateway
+          </p>
+        )}
+        {error && <p style={{ color: 'red' }}>{error}</p>}
+      </div>
+
       <form
         onSubmit={handleSubmit}
         action='/charge'
@@ -113,6 +135,11 @@ function App() {
         />
         <button className='btn btn btn-success float-right'>Buy</button>
       </form>
+      <h4>Test Credit Card</h4>
+      <p>Card Number: 4242424242424242</p>
+      <p>Expiry Month: 12</p>
+      <p>Expiry Year: 22</p>
+      <p>CVC: 123</p>
     </div>
   );
 }
